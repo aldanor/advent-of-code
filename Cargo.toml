@@ -7,3 +7,7 @@ publish = false
 
 [dependencies]
 itertools = "0.7"
+
+[features]
+default = []
+bench = []

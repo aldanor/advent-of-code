@@ -42,3 +42,20 @@ fn test_day01_2() {
     const INPUT: &str = include_str!("../input/01.txt");
     assert_eq!(day01_2(INPUT), 219);
 }
+
+#[cfg(feature = "bench")]
+use test::{Bencher, black_box};
+
+#[cfg_attr(feature = "bench", bench)]
+#[cfg(feature = "bench")]
+fn bench_day01_1(b: &mut Bencher) {
+    const INPUT: &str = include_str!("../input/01.txt");
+    b.iter(|| day01_1(black_box(INPUT)));
+}
+
+#[cfg_attr(feature = "bench", bench)]
+#[cfg(feature = "bench")]
+fn bench_day01_2(b: &mut Bencher) {
+    const INPUT: &str = include_str!("../input/01.txt");
+    b.iter(|| day01_2(black_box(INPUT)));
+}
