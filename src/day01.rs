@@ -1,5 +1,4 @@
 use hashbrown::HashSet;
-
 use itertools::Itertools;
 
 use crate::util::*;
@@ -44,7 +43,7 @@ fn test_day01_2() {
 }
 
 #[cfg(feature = "bench")]
-use test::{Bencher, black_box};
+use test::{black_box, Bencher};
 
 #[cfg_attr(feature = "bench", bench)]
 #[cfg(feature = "bench")]
