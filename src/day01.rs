@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use itertools::Itertools;
+
 use crate::util::*;
 
 pub fn day01_1(input: &str) -> i64 {
@@ -10,14 +12,14 @@ pub fn day01_2(input: &str) -> i64 {
     let mut set = HashSet::new();
     set.insert(0);
     parse_ints(input)
-        .collect::<Vec<_>>()
-        .iter()
+        .collect_vec()
+        .into_iter()
         .cycle()
         .scan(0, |acc, x| {
-            *acc += *x;
+            *acc += x;
             Some(*acc)
         })
-        .filter_map(|x| if !set.insert(x) { Some(x) } else { None })
+        .skip_while(|&x| set.insert(x))
         .next()
         .unwrap()
 }
