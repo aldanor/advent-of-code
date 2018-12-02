@@ -6,7 +6,6 @@ edition = "2018"
 publish = false
 
 [dependencies]
-hashbrown = "0.1"
 itertools = "0.7"
 num-integer = "0.1"
 

@@ -1,23 +1,24 @@
 use std::str;
 
-use hashbrown::HashMap;
 use itertools::Itertools;
 
 pub fn day02_1(input: &str) -> u32 {
-    let mut map = HashMap::new();
-    let (a, b) = input
-        .trim()
-        .split_whitespace()
-        .map(|id| {
-            map.clear();
-            id.chars().for_each(|c| *map.entry(c).or_default() += 1);
-            let (a, b) = map.values().fold((false, false), |acc, x: &i32| {
-                (acc.0 || *x % 2 == 0, acc.1 || *x % 3 == 0)
-            });
-            (a as u32, b as u32)
-        })
-        .fold((0, 0), |acc, (a, b)| (acc.0 + a, acc.1 + b));
-    a * b
+    let (mut n2, mut n3) = (0, 0);
+    for id in input.trim().split_whitespace() {
+        let mut a: [u8; 256] = [0; 256];
+        for c in id.as_bytes() {
+            unsafe { *a.get_unchecked_mut(*c as usize) += 1 };
+        }
+        let (mut k2, mut k3) = (false, false);
+        for c in id.as_bytes() {
+            let c = unsafe { *a.get_unchecked(*c as usize) };
+            k2 = k2 || c == 2;
+            k3 = k3 || c == 3;
+        }
+        n2 += k2 as u32;
+        n3 += k3 as u32;
+    }
+    n2 * n3
 }
 
 pub fn day02_2(input: &str) -> String {
