@@ -1,5 +1,5 @@
-use hashbrown::HashSet;
 use itertools::Itertools;
+use num_integer::Integer;
 
 use crate::util::*;
 
@@ -8,19 +8,44 @@ pub fn day01_1(input: &str) -> i32 {
 }
 
 pub fn day01_2(input: &str) -> i32 {
-    let mut set = HashSet::new();
-    set.insert(0);
-    parse_ints(input)
-        .collect_vec()
-        .into_iter()
-        .cycle()
+    let s = parse_ints(input)
         .scan(0, |acc, x| {
             *acc += x;
             Some(*acc)
         })
-        .skip_while(|&x| set.insert(x))
-        .next()
-        .unwrap()
+        .collect_vec();
+    let sum = *s.last().unwrap();
+    let n = s.len();
+    if sum == 0 {
+        for j in 1..n {
+            for i in 0..(j - 1) {
+                if s[i] == s[j] {
+                    return s[i];
+                }
+            }
+        }
+        return 0;
+    }
+    let mut out = (i32::max_value(), 0);
+    for i in 0..(n - 1) {
+        let si = unsafe { *s.get_unchecked(i) };
+        for j in (i + 1)..n {
+            let sj = unsafe { *s.get_unchecked(j) };
+            let (d, r) = (si - sj).div_rem(&sum);
+            if r == 0 {
+                let dn = d * (n as i32);
+                let (idx, val) = if d > 0 {
+                    (dn + (j as i32), si)
+                } else {
+                    (-dn + (i as i32), sj)
+                };
+                if idx < out.0 {
+                    out = (idx, val);
+                }
+            }
+        }
+    }
+    out.1
 }
 
 #[test]
