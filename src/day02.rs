@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use std::str;
+
+use hashbrown::HashMap;
+use itertools::Itertools;
 
 pub fn day02_1(input: &str) -> u32 {
     let mut map = HashMap::new();
@@ -18,19 +21,33 @@ pub fn day02_1(input: &str) -> u32 {
 }
 
 pub fn day02_2(input: &str) -> String {
-    let input = input.trim();
-    for id1 in input.split_whitespace() {
-        for id2 in input.split_whitespace() {
-            let (i, n) =
-                id1.chars()
-                    .zip(id2.chars())
-                    .enumerate()
-                    .fold((0, 0), |acc, (i, (c1, c2))| {
-                        let neq = c1 != c2;
-                        (if neq { i } else { acc.0 }, acc.1 + neq as u32)
-                    });
-            if n == 1 {
-                return format!("{}{}", &id1[..i], &id1[(i + 1)..]);
+    let ids = input.trim().split_whitespace().collect_vec();
+    unsafe {
+        for i1 in 0..(ids.len() - 1) {
+            for i2 in (i1 + 1)..ids.len() {
+                let id1 = ids.get_unchecked(i1).as_bytes();
+                let id2 = ids.get_unchecked(i2).as_bytes();
+                if id1.len() != id2.len() {
+                    continue;
+                }
+                let (mut i, mut n) = (0, 0);
+                for j in 0..id1.len() {
+                    if id1.get_unchecked(j) != id2.get_unchecked(j) {
+                        n += 1;
+                        if n > 1 {
+                            break;
+                        }
+                        i = j;
+                    }
+                }
+                if n != 1 {
+                    continue;
+                }
+                return format!(
+                    "{}{}",
+                    str::from_utf8_unchecked(&id1[..i]),
+                    str::from_utf8_unchecked(&id1[(i + 1)..])
+                );
             }
         }
     }
@@ -54,7 +71,7 @@ fn test_day02_1() {
 }
 
 #[cfg(feature = "bench")]
-use test::{Bencher, black_box};
+use test::{black_box, Bencher};
 
 #[cfg_attr(feature = "bench", bench)]
 #[cfg(feature = "bench")]
