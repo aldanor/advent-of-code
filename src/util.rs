@@ -1,7 +1,7 @@
-pub fn parse_ints<'a>(input: &'a str) -> impl Iterator<Item = i64> + 'a {
+pub fn parse_ints<'a>(input: &'a str) -> impl Iterator<Item = i32> + 'a {
     input
         .trim()
         .split_whitespace()
-        .map(&str::parse::<i64>)
+        .map(&str::parse::<i32>)
         .map(&Result::unwrap)
 }

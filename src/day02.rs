@@ -11,8 +11,8 @@ pub fn day02_1(input: &str) -> u32 {
         .map(|id| {
             map.clear();
             id.chars().for_each(|c| *map.entry(c).or_default() += 1);
-            let (a, b) = map.values().fold((false, false), |acc, x| {
-                (acc.0 || x % 2 == 0, acc.1 || x % 3 == 0)
+            let (a, b) = map.values().fold((false, false), |acc, x: &i32| {
+                (acc.0 || *x % 2 == 0, acc.1 || *x % 3 == 0)
             });
             (a as u32, b as u32)
         })

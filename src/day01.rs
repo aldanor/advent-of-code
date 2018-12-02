@@ -3,11 +3,11 @@ use itertools::Itertools;
 
 use crate::util::*;
 
-pub fn day01_1(input: &str) -> i64 {
+pub fn day01_1(input: &str) -> i32 {
     parse_ints(input).sum()
 }
 
-pub fn day01_2(input: &str) -> i64 {
+pub fn day01_2(input: &str) -> i32 {
     let mut set = HashSet::new();
     set.insert(0);
     parse_ints(input)
