@@ -84,11 +84,14 @@ pub fn day03_2(input: &str) -> u32 {
     let mut rects = Rect::parse_many(input);
     rects.sort();
     let n = rects.len();
+    let mut ok = iter::repeat(true).take(n).collect_vec();
     for i in 0..n {
+        if !ok[i] {
+            continue;
+        }
         let ri = &rects[i];
         let min = ri.x1 + ri.y1;
         let max = ri.x2 + ri.y2;
-        let mut overlap = false;
         for j in 0..n {
             let rj = &rects[j];
             if rj.x2 + rj.y2 <= min {
@@ -98,11 +101,11 @@ pub fn day03_2(input: &str) -> u32 {
                 break;
             }
             if i != j && ri.overlaps(rj) {
-                overlap = true;
-                break;
+                ok[i] = false;
+                ok[j] = false;
             }
         }
-        if !overlap {
+        if ok[i] {
             return ri.id;
         }
     }
