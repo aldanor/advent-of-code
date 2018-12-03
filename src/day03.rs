@@ -45,15 +45,11 @@ fn make_board(rects: &[Rect]) -> Vec<BigUint> {
     for rect in rects {
         let mut mask = [0u8; N];
         for x in rect.x1..rect.x2 {
-            unsafe {
-                *mask.get_unchecked_mut(x) = 1;
-            }
+            mask[x] = 1;
         }
         let mask = BigUint::from_bytes_be(&mask);
         for y in rect.y1..rect.y2 {
-            unsafe {
-                *board.get_unchecked_mut(y) += &mask;
-            }
+            board[y] += &mask;
         }
     }
     board
@@ -79,10 +75,8 @@ pub fn day03_2(input: &str) -> u32 {
         let mut mask = [0u8; N];
         let mut expected = [0u8; N];
         for x in rect.x1..rect.x2 {
-            unsafe {
-                *mask.get_unchecked_mut(x) = 0xFF;
-                *expected.get_unchecked_mut(x) = 1;
-            }
+            mask[x] = 0xFF;
+            expected[x] = 1;
         }
         let mask = BigUint::from_bytes_be(&mask);
         let expected = BigUint::from_bytes_be(&expected);
@@ -128,7 +122,7 @@ fn bench_day03_1(b: &mut Bencher) {
 
 #[cfg_attr(feature = "bench", bench)]
 #[cfg(feature = "bench")]
-fn bench_day01_2(b: &mut Bencher) {
+fn bench_day03_2(b: &mut Bencher) {
     const INPUT: &str = include_str!("../input/03.txt");
     b.iter(|| day03_2(black_box(INPUT)));
 }
