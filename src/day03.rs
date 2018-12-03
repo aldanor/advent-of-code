@@ -1,3 +1,4 @@
+use std::cmp::{Ordering, PartialOrd};
 use std::iter;
 use std::str::FromStr;
 
@@ -11,13 +12,25 @@ pub type Coord = usize;
 
 pub const N: usize = 1024;
 
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Copy, Clone, Default, PartialEq, Eq)]
 struct Rect {
     id: u32,
     x1: Coord,
     y1: Coord,
     x2: Coord,
     y2: Coord,
+}
+
+impl PartialOrd for Rect {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some((self.x1 + self.y1).cmp(&(other.x1 + other.y1)))
+    }
+}
+
+impl Ord for Rect {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.partial_cmp(other).unwrap()
+    }
 }
 
 impl Rect {
@@ -68,13 +81,22 @@ pub fn day03_1(input: &str) -> u32 {
 }
 
 pub fn day03_2(input: &str) -> u32 {
-    let rects = Rect::parse_many(input);
+    let mut rects = Rect::parse_many(input);
+    rects.sort();
     let n = rects.len();
     for i in 0..n {
         let ri = &rects[i];
+        let min = ri.x1 + ri.y1;
+        let max = ri.x2 + ri.y2;
         let mut overlap = false;
         for j in 0..n {
             let rj = &rects[j];
+            if rj.x2 + rj.y2 <= min {
+                continue;
+            }
+            if rj.x1 + rj.y1 >= max {
+                break;
+            }
             if i != j && ri.overlaps(rj) {
                 overlap = true;
                 break;
