@@ -38,6 +38,10 @@ impl Rect {
     pub fn parse_many(s: &str) -> Vec<Self> {
         s.trim().lines().map(|s| Self::parse(s)).collect()
     }
+
+    pub fn overlaps(&self, other: &Rect) -> bool {
+        !(self.x1 >= other.x2 || other.x1 >= self.x2 || self.y1 >= other.y2 || other.y1 >= self.y2)
+    }
 }
 
 fn make_board(rects: &[Rect]) -> Vec<BigUint> {
@@ -65,25 +69,19 @@ pub fn day03_1(input: &str) -> u32 {
 
 pub fn day03_2(input: &str) -> u32 {
     let rects = Rect::parse_many(input);
-    let board = make_board(&rects);
-    for rect in rects {
-        let mut mask = [0u8; N];
-        let mut expected = [0u8; N];
-        for x in rect.x1..rect.x2 {
-            mask[x] = 0xFF;
-            expected[x] = 1;
-        }
-        let mask = BigUint::from_bytes_be(&mask);
-        let expected = BigUint::from_bytes_be(&expected);
-        let mut answer = true;
-        for y in rect.y1..rect.y2 {
-            if &(&board[y] & &mask) != &expected {
-                answer = false;
+    let n = rects.len();
+    for i in 0..n {
+        let ri = &rects[i];
+        let mut overlap = false;
+        for j in 0..n {
+            let rj = &rects[j];
+            if i != j && ri.overlaps(rj) {
+                overlap = true;
                 break;
             }
         }
-        if answer {
-            return rect.id;
+        if !overlap {
+            return ri.id;
         }
     }
     0
