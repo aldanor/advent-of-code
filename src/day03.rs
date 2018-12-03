@@ -56,15 +56,10 @@ fn make_board(rects: &[Rect]) -> Vec<BigUint> {
 }
 
 pub fn day03_1(input: &str) -> u32 {
-    let rects = Rect::parse_many(input);
-    make_board(&rects)
+    make_board(&Rect::parse_many(input))
         .into_iter()
-        .map(|x| {
-            x.to_bytes_be()
-                .into_iter()
-                .map(|x| (x > 1) as u32)
-                .sum::<u32>()
-        })
+        .flat_map(|x| x.to_bytes_be())
+        .map(|x| (x > 1) as u32)
         .sum()
 }
 
