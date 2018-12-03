@@ -56,7 +56,7 @@ pub fn day02_2(input: &str) -> String {
 }
 
 #[test]
-fn test_day01_1() {
+fn test_day02_1() {
     const SAMPLE: &str = "abcdef bababc abbcde abcccd aabcdd abcdee ababab";
     assert_eq!(day02_1(SAMPLE), 12);
     const INPUT: &str = include_str!("../input/02.txt");
@@ -64,7 +64,7 @@ fn test_day01_1() {
 }
 
 #[test]
-fn test_day02_1() {
+fn test_day02_2() {
     const SAMPLE: &str = "abcde fghij klmno pqrst fguij axcye wvxyz";
     assert_eq!(day02_2(SAMPLE), "fgij");
     const INPUT: &str = include_str!("../input/02.txt");
@@ -76,14 +76,14 @@ use test::{black_box, Bencher};
 
 #[cfg_attr(feature = "bench", bench)]
 #[cfg(feature = "bench")]
-fn bench_day01_1(b: &mut Bencher) {
+fn bench_day02_1(b: &mut Bencher) {
     const INPUT: &str = include_str!("../input/02.txt");
     b.iter(|| day02_1(black_box(INPUT)));
 }
 
 #[cfg_attr(feature = "bench", bench)]
 #[cfg(feature = "bench")]
-fn bench_day01_2(b: &mut Bencher) {
+fn bench_day02_2(b: &mut Bencher) {
     const INPUT: &str = include_str!("../input/02.txt");
     b.iter(|| day02_2(black_box(INPUT)));
 }
